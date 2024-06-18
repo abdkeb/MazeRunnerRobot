@@ -5,7 +5,7 @@ Here is how to check the sensor:
   - VIN - 3.3v
   - SDA - D22
   - SDL - D21
-  
+Note: you will have to add library Adafruit_VL53L0X.h
   
 
 
