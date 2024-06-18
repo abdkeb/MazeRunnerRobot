@@ -4,7 +4,7 @@ Here is how to check the sensor:
   - GND - GND
   - VIN - 3.3v
   - SDA - D22
-  - SDL - D21
+  - SCL - D21
 - set baud to: 115200
 Note: you will have to add library Adafruit_VL53L0X.h
   
