@@ -3,8 +3,8 @@ How to check solo sensor:
 - connections:
   - GND - GND
   - VIN - 3.3v
-  - SDA - D22
-  - SCL - D21
+  - SDA - D21
+  - SCL - D22
 
 How to check dual sensors:
 Connections for Sensor 1:
