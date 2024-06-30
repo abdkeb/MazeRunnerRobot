@@ -14,6 +14,16 @@ Connections for Sensor 2:
   SCL to GPIO 22 (I2C clock line)
   XSHUT to a digital pin TX2 (e.g., GPIO 17 )
 
-
-  Motor Connections:
+Motor Connections:
+  VCC - 3.3v
+  VM - Vin
+  GND- GND
   
+  STBY - D27
+  PMWA - D13
+  AIN1 - D12
+  AIN2 - D14
+  
+  PWMB - D26
+  BIN1 - D25
+  BIN2 - D33
