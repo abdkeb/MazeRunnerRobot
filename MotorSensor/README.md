@@ -1,6 +1,6 @@
 
 
-How to check dual sensors:
+How to check three sensors:
 Connections for Sensor 1:
   VCC to 3.3V
   GND to GND
@@ -13,6 +13,13 @@ Connections for Sensor 2:
   SDA to GPIO 21 (I2C data line)
   SCL to GPIO 22 (I2C clock line)
   XSHUT to a digital pin TX2 (e.g., GPIO 17 )
+Connections for Sensor 2:
+  VCC to 3.3V
+  GND to GND
+  SDA to GPIO 21 (I2C data line)
+  SCL to GPIO 22 (I2C clock line)
+  XSHUT to a digital pin RX0 (e.g., GPIO 03 )
+  
 
 Motor Connections:
   VCC - 3.3v
