@@ -5,6 +5,7 @@ from typing import List
 from typing import Tuple
 from MazeEnv import MazeEnv
 import heapdict
+import defs
 
 class GeneralAgent:
     def __init__(self):

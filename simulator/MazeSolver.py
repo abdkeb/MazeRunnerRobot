@@ -1,7 +1,9 @@
 import MazeEnv
-from Algorithms import *
+from AlgorithmAgents import *
 import time
 from IPython.display import clear_output
+import defs
+import TranslateToRobotActions
 
 # S = start
 # G = goal
@@ -10,16 +12,16 @@ from IPython.display import clear_output
 
 boards = {
     "Map":
-    ["WGFFFW",
-     "WFWWWW",
-     "WFFFFW",
-     "WFWWSW",
-     "WFFFWW",
+    ["SFFFWWWWWWWW",
+     "WWWFFFWWWWWW",
+     "WWWFWWWFWFWW",
+     "WWWFFFWFFFFG",
+     "WWWFWFFFWFWW",
      ]
 }
 
 
-def print_solution(actions, env: MazeEnv) -> None:
+def printSolution(actions, env: MazeEnv) -> None:
     env.reset()
     total_cost = 0
     print(env.render())
@@ -46,23 +48,24 @@ def print_solution(actions, env: MazeEnv) -> None:
         if terminated is True:
             break
 
-def SolveMaze():
+def solveMaze(boards, print_solution=0):
     for i, board in enumerate(boards.values()):
         env = MazeEnv(board)
         # try:
         WAstar_agent = WeightedAStarAgent()
         actions, total_cost, expanded = WAstar_agent.search(env, h_weight=0.5)
-        print_solution(actions, env)
 
-            # assert total_cost <= opt_results[i], "incorrect solution cost"
-        # except Exception as e:
-        #     f.write("WAstar{}: FAIL - {}\n".format(i, e))
-        # else:
-        #     f.write("WAstar{}: PASS\n".format(i))
+        if print_solution:
+            printSolution(actions, env)
+        return actions
+
 
 
 # opt_results = [235, 30, 52, 52, 76, 76, 87, 97, 106, 148]
 # f = open("feedback.txt", "w")
 
 print("testing...")
-SolveMaze()
+action = solveMaze(boards, print_solution=1)
+robot_solution = TranslateToRobotActions.TTRA(action, boards["Map"]).translateSolution()
+print(robot_solution)
+
