@@ -12,14 +12,20 @@ import TranslateToRobotActions
 
 boards = {
     "Map":
-    ["SFFFWWWWWWWW",
-     "WWWFFFWWWWWW",
-     "WWWFWWWFWFWW",
-     "WWWFFFWFFFFG",
+    ["SFFFWFFFFFWW",
+     "WFWFFFWWWFFW",
+     "WFWFWWWFWWWW",
+     "FFWFFFWFFFFG",
      "WWWFWFFFWFWW",
      ]
 }
 
+def convertTranslationToRobotFormat(robot_action_list):
+    solution = "{ "
+    for turn, turn_cnt  in robot_action_list:
+        solution += "{ "+ f"{turn}, {turn_cnt}" + " },"
+    solution += " }"
+    return solution
 
 def printSolution(actions, env: MazeEnv) -> None:
     env.reset()
@@ -53,19 +59,20 @@ def solveMaze(boards, print_solution=0):
         env = MazeEnv(board)
         # try:
         WAstar_agent = WeightedAStarAgent()
-        actions, total_cost, expanded = WAstar_agent.search(env, h_weight=0.5)
-
+        agent_action_list, total_cost, expanded = WAstar_agent.search(env, h_weight=0.5)
+        robot_action_list = TranslateToRobotActions.TTRA(agent_action_list, board).translateSolution()
+        solution = convertTranslationToRobotFormat(robot_action_list)
         if print_solution:
-            printSolution(actions, env)
-        return actions
+            printSolution(agent_action_list, env)
+        return agent_action_list, robot_action_list, solution
 
 
 
 # opt_results = [235, 30, 52, 52, 76, 76, 87, 97, 106, 148]
 # f = open("feedback.txt", "w")
 
-print("testing...")
-action = solveMaze(boards, print_solution=1)
-robot_solution = TranslateToRobotActions.TTRA(action, boards["Map"]).translateSolution()
-print(robot_solution)
+# print("testing...")
+agent_actions, robot_actions, solution = solveMaze(boards, print_solution=0)
+print(solution)
+
 

@@ -56,11 +56,11 @@ class TTRA:
                 r_cnt += 1
 
             if left == self.actions[action_index + 1]:
-                to_return_solution.append(["LEFT", l_cnt])
+                to_return_solution.append(["left", l_cnt])
                 r_cnt = 0
                 l_cnt = 0
             if right == self.actions[action_index + 1]:
-                to_return_solution.append(["RIGHT", r_cnt])
+                to_return_solution.append(["right", r_cnt])
                 r_cnt = 0
                 l_cnt = 0
             action_index += 1
