@@ -53,6 +53,22 @@ void setupSensors() {
   Serial.println(F("VL53L0X three sensors setup complete"));
 }
 
+void getMeasurments(){
+
+  RightSensor.rangingTest(&measureRight, false);
+  ForwardSensor.rangingTest(&measureForward, false);
+  LeftSensor.rangingTest(&measureLeft, false);
+
+  distance_Right = measureRight.RangeMilliMeter;
+  distance_Forward = measureForward.RangeMilliMeter;
+  distance_Left = measureLeft.RangeMilliMeter;
+
+  Serial.print("Right: "); Serial.print(distance_Right);
+  Serial.print(" Forward: "); Serial.print(distance_Forward);
+  Serial.print(" Left: "); Serial.println(distance_Left);
+
+}
+
 
 
 

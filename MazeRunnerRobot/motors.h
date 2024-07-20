@@ -12,12 +12,12 @@ void move_forward() {
   // Move Motor A forward at defined speed
   digitalWrite(AIN1, HIGH);
   digitalWrite(AIN2, LOW);
-  analogWrite(PWMA, LEFT_SPEED);
+  analogWrite(PWMA, left_speed_adjustment);
 
   // Move Motor B forward at defined speed
   digitalWrite(BIN1, HIGH);
   digitalWrite(BIN2, LOW);
-  analogWrite(PWMB, RIGHT_SPEED);
+  analogWrite(PWMB, right_speed_adjustment);
 }
 
 void stop_moving() {
@@ -26,38 +26,49 @@ void stop_moving() {
 }
 
 void move_right(int duration) {
+  digitalWrite(RIGHT_LED_PIN,HIGH);
   move_forward();
-  delay(500);
+  delay(800 );
   unsigned long startTime = millis();
+  double turn_speed = (0.2*FULLSPEED);
   while (millis() - startTime < duration) {
     digitalWrite(AIN1, HIGH);
     digitalWrite(AIN2, LOW);
-    analogWrite(PWMA, FULLSPEED);
+    analogWrite(PWMA,turn_speed );
 
     digitalWrite(BIN1, LOW);
     digitalWrite(BIN2, HIGH);
-    analogWrite(PWMB, FULLSPEED);
+    analogWrite(PWMB, turn_speed);
   }
+  move_forward();
+  delay(580);
   stop_moving();
+  digitalWrite(RIGHT_LED_PIN,LOW);
 }
 
 void move_left(int duration) {
+  double turn_speed = (0.2*FULLSPEED);
+  digitalWrite(LEFT_LED_PIN,HIGH);
   move_forward();
-  delay(500);
+  delay(790);
   unsigned long startTime = millis();
   while (millis() - startTime < duration) {
     digitalWrite(AIN1, LOW);
     digitalWrite(AIN2, HIGH);
-    analogWrite(PWMA, FULLSPEED);
+    analogWrite(PWMA, turn_speed);
 
     digitalWrite(BIN1, HIGH);
     digitalWrite(BIN2, LOW);
-    analogWrite(PWMB, FULLSPEED);
+    analogWrite(PWMB, turn_speed);
   }
+  move_forward();
+  delay(580);
   stop_moving();
+  digitalWrite(LEFT_LED_PIN,LOW);
 }
 
 void move_backward(int duration) {
+  
   unsigned long startTime = millis();
   while (millis() - startTime < duration) {
     digitalWrite(AIN1, LOW);
@@ -69,6 +80,7 @@ void move_backward(int duration) {
     analogWrite(PWMB, FULLSPEED);
   }
   stop_moving();
+  
 }
 
 void motorsSetup() {
