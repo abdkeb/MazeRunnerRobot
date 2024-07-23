@@ -2,21 +2,14 @@ from contextlib import closing
 from io import StringIO
 from os import path
 import random
-from typing import List, Optional
-import time
-
+from typing import List, Optional, Tuple
 import numpy as np
-
 import gym
 from gym import Env, spaces, utils
-from gym.error import DependencyNotInstalled
-from typing import List, Tuple
-
-
 
 class MazeEnv(Env):
     """
-    Maze involves solving a maze from Start(S) to Goal(G) without crashing into  Walls(W).
+    Maze involves solving a maze from Start(S) to Goal(G) without crashing into Walls(W).
     ### Action Space
     The Robot takes a 1-element vector for actions.
     The action space is `(dir)`, where `dir` decides direction to move in which can be:
@@ -35,36 +28,33 @@ class MazeEnv(Env):
         desc=["SFFF", "FWFW", "FFFW", "WFFG"].
     """
 
-    def __init__(
-        self,
-        desc
-    ):
+    def __init__(self, desc):
         self.desc = desc = np.asarray(desc, dtype="c")
         self.nrow, self.ncol = nrow, ncol = desc.shape
         self.p1 = None
         self.p2 = None
         self.goals = []
         self.initial_state = self.to_state(0, 0)
+        self.visited_positions = []
 
         nA = 4
-        # nL_cost = {b"F": 10.0, b"H" :np.inf, b"T": 3.0, b"A": 2.0, b"L": 1.0, b"S": 1.0, b"G": 1.0, b"P": 100}
         nL_cost = {b"W": np.inf, b"F": 1.0, b"S": 1.0, b"G": 1.0}
-        nS = nrow * ncol 
+        nS = nrow * ncol
 
         self.P = {s: {a: [] for a in range(nA)} for s in range(nS)}
 
         for row in range(nrow):
-          for col in range(ncol):
-            state = self.to_state(row, col)
-            if desc[row, col] == b"G":
-                self.goals.append(state)
-            if desc[row, col] == b"S":
-                self.initial_state = state
+            for col in range(ncol):
+                state = self.to_state(row, col)
+                if desc[row, col] == b"G":
+                    self.goals.append(state)
+                if desc[row, col] == b"S":
+                    self.initial_state = state
 
         for row in range(nrow):
             for col in range(ncol):
                 for action in range(nA):
-                    new_row, new_col= self.inc(row, col, action)
+                    new_row, new_col = self.inc(row, col, action)
                     state = self.to_state(row, col)
                     curlleter = desc[row, col]
                     newletter = desc[new_row, new_col]
@@ -74,14 +64,13 @@ class MazeEnv(Env):
                     else:
                         terminated = bytes(newletter) in b"GH"
                         cost = nL_cost[newletter]
-                        self.P[state][action] = (newstate, cost, terminated)          
-                  
+                        self.P[state][action] = (newstate, cost, terminated)
 
         self.observation_space = spaces.Discrete(nS)
         self.action_space = spaces.Discrete(nA)
 
         self.render_mode = "ansi"
-    
+
     def step(self, a: int) -> Tuple[int, int, bool]:
         """
         Moving the agent one step.
@@ -89,14 +78,14 @@ class MazeEnv(Env):
         Args:
             a - action(DOWN, RIGHT, UP, LEFT)
         Returns:
-            the new state, the cost of the step and whether the search is over 
+            the new state, the cost of the step and whether the search is over
             (it can happen when the agent reaches a final state or falls into a hole).
         """
         newstate, cost, terminated = self.P[self.s][a]
         self.s = newstate
         self.lastaction = a
-        return (int(newstate), cost, terminated)
-    
+        self.visited_positions.append(newstate)
+        return int(newstate), cost, terminated
 
     def inc(self, row: int, col: int, a: int) -> Tuple[int, int]:
         """
@@ -109,17 +98,15 @@ class MazeEnv(Env):
         Returns:
             The new position.
         """
-  
         if a == 0:
-          row = min(row + 1, self.nrow - 1)
+            row = min(row + 1, self.nrow - 1)
         elif a == 1:
-          col = min(col + 1, self.ncol - 1)
+            col = min(col + 1, self.ncol - 1)
         elif a == 2:
-          row = max(row - 1, 0)
+            row = max(row - 1, 0)
         elif a == 3:
-          col = max(col - 1, 0)
-        return (row, col)
-
+            col = max(col - 1, 0)
+        return row, col
 
     def to_state(self, row: int, col: int) -> int:
         """
@@ -140,7 +127,7 @@ class MazeEnv(Env):
         Returns:
             row, col
         """
-        return (state // self.ncol, state % self.ncol)
+        return state // self.ncol, state % self.ncol
 
     def succ(self, state: int):
         """
@@ -149,12 +136,12 @@ class MazeEnv(Env):
             state
         Returns:
             Returns a dictionary that contains information on all the successors of the state.
-            The keys are the actions. 
-            The values are tuples of the form (new state, cost, terminated). 
+            The keys are the actions.
+            The values are tuples of the form (new state, cost, terminated).
             Note that terminated is true when the agent reaches a final state or a hole.
         """
         return self.P[state]
-    
+
     def set_state(self, state: int) -> None:
         """
         Sets the current state of the agent.
@@ -186,23 +173,21 @@ class MazeEnv(Env):
 
     def reset(self) -> int:
         """
-        Initializes the search problem. 
+        Initializes the search problem.
         """
         super().reset()
         self.s = self.get_initial_state()
         self.lastaction = None
+        self.visited_positions = [self.s]
 
         return int(self.s)
 
-
-
     def render(self):
         """
-        Returns a view of the board. 
+        Returns a view of the board.
         """
         return self._render_text()
 
-    
     def _render_text(self):
         desc = self.desc.copy().tolist()
 
@@ -212,7 +197,10 @@ class MazeEnv(Env):
         desc = [[c.decode("utf-8") for c in line] for line in desc]
         for r in range(len(desc)):
             for c in range(len(desc[r])):
-                if desc[r][c] == "W":
+                state = self.to_state(r, c)
+                if state in self.visited_positions:
+                    desc[r][c] = utils.colorize(desc[r][c], "magenta", highlight=True)
+                elif desc[r][c] == "W":
                     desc[r][c] = utils.colorize(desc[r][c], "white", highlight=True)
                 elif desc[r][c] == "G":
                     desc[r][c] = utils.colorize(desc[r][c], "yellow", highlight=True)
@@ -220,8 +208,6 @@ class MazeEnv(Env):
                     desc[r][c] = utils.colorize(desc[r][c], "yellow", highlight=True)
                 elif desc[r][c] in "F":
                     desc[r][c] = utils.colorize(desc[r][c], "blue", highlight=True)
-                desc[row][col] = utils.colorize(desc[row][col], "magenta", highlight=True)
-        # desc[0][0] = utils.colorize(desc[0][0], "yellow", highlight=True)
         if self.lastaction is not None:
             outfile.write(f"  ({['Down', 'Right', 'Up', 'Left'][self.lastaction]})\n")
         else:
