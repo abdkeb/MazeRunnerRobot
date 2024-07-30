@@ -1,6 +1,11 @@
 #ifndef SENSORS_H
 #define SENSORS_H
 
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <iomanip>
 #include <Wire.h>
 #include <Adafruit_VL53L0X.h>
 #include <Arduino.h>
@@ -63,9 +68,17 @@ void getMeasurments(){
   distance_Forward = measureForward.RangeMilliMeter;
   distance_Left = measureLeft.RangeMilliMeter;
 
-  Serial.print("Right: "); Serial.print(distance_Right);
-  Serial.print(" Forward: "); Serial.print(distance_Forward);
-  Serial.print(" Left: "); Serial.println(distance_Left);
+  std::ostringstream oss;
+  oss << "Walls status: " << walls_current << " Right: " << distance_Right << " Forward: " << distance_Forward << " Left: " << distance_Left ;
+  
+  // const char* readings = (oss.str()).c_str();
+  WebSerial.println((oss.str()).c_str());
+  // Serial.println(readings);
+
+  // WebSerial.print("Walls status: "); WebSerial.print(walls_current);
+  // WebSerial.print(" Right: "); WebSerial.print(distance_Right);
+  // WebSerial.print(" Forward: "); WebSerial.print(distance_Forward);
+  // WebSerial.print(" Left: "); WebSerial.println(distance_Left);
 
 }
 

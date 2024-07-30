@@ -6,6 +6,19 @@
 #include <Arduino.h>
 #include <vector>
 #include <utility>  // For std::pair
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <WebSerial.h>
+
+
+//debug
+#define LED 2
+AsyncWebServer server(80);
+const char* ssid = "omar_room";          // Your WiFi SSID
+const char* password = "1234567899";  // Your WiFi Password
+bool got_ip = false;
+
 
 #define LEFT_LED_PIN 18
 #define RIGHT_LED_PIN 5

@@ -7,12 +7,54 @@
 #include "sensors.h"
 #include "adjust.h"
 #include "motors.h"
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <WebSerial.h>
 
 
+
+
+void recvMsg(uint8_t *data, size_t len){
+  WebSerial.println("Received Data...");
+  String d = "";
+  for(int i=0; i < len; i++){
+    d += char(data[i]);
+  }
+  WebSerial.println(d);
+  if (d == "ON"){
+    digitalWrite(LED, HIGH);
+  }
+  if (d=="OFF"){
+    digitalWrite(LED, LOW);
+  }
+}
+
+void debugSetup() {
+  got_ip = false;
+  pinMode(LED, OUTPUT);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.printf("WiFi Failed!\n");
+    return;
+  }
+  // Serial.print("IP Address: ");
+  // IPAddress localIP = WiFi.localIP();
+  // Serial.println(localIP);
+  // Serial.println();
+  
+  WebSerial.begin(&server);
+  // WebSerial.msgCallback(recvMsg);
+  server.begin();
+}
 
 void setup() {
+  Serial.begin(115200);
+  while (!Serial);
   pinMode(LEFT_LED_PIN, OUTPUT);
   pinMode(RIGHT_LED_PIN, OUTPUT);
+  debugSetup();
   setupSensors();
   motorsSetup();
 }
@@ -84,14 +126,24 @@ void updateState(){
 
 }
 
+void getIPAddress(){
+   if( !got_ip){
+    Serial.println("started loop");
+    got_ip = true;
+    for(int i = 0; i < 1; i++){
+      Serial.print("IP Address: ");
+      Serial.println(WiFi.localIP());
+    }
+  }
+}
+
 void loop() {
-
+  
+  // WebSerial is accessible at "<IP Address>/webserial" in browser
+  getIPAddress();
   getMeasurments();
-
   updateState();
   countJunctions();
-  Serial.print("Walls status: "); Serial.print(walls_current);
-  
 
   // Check if we've reached the end of the turns vector
   if (vec_index >= turns.size()) {
@@ -116,5 +168,5 @@ void loop() {
     adjust_course();
   }
 
-  delay(10);
+  delay(30);
 }
