@@ -84,7 +84,7 @@ void turn90Degrees() {
   // Wait for encoder to reach a value that represents a 90 degree turn
   encoderValueA = 0; // Reset encoder value for motor A
   encoderValueB = 0; // Reset encoder value for motor B
-  long targetCount = 900; // Start with an estimated value   #almost 90 degrees with speed of 200
+  long targetCount = 870; // Start with an estimated value   #almost 90 degrees with speed of 200
   while (abs(encoderValueA) <= targetCount && abs(encoderValueB) <= targetCount) {
     // Wait
   }
