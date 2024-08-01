@@ -1,0 +1,125 @@
+// Define motor control pins
+#define MotFwdA  14 // Motor A Forward pin  - left motor
+#define MotRevA  12 // Motor A Reverse pin  - right motor
+#define MotFwdB  33 // Motor B Forward pin
+#define MotRevB  25 // Motor B Reverse pin
+#define STBY     27 // Standby pin
+#define PWMA     13 // PWM control for Motor A speed
+#define PWMB     26 // PWM control for Motor B speed
+
+// Encoder pins for Motor A
+int encoderPinA1 = 35; // Encoder Output 'A' for motor A
+int encoderPinA2 = 34; // Encoder Output 'B' for motor A
+volatile int lastEncodedA = 0; // Here updated value of encoder store.
+volatile long encoderValueA = 0; // Raw encoder value
+
+// Encoder pins for Motor B
+int encoderPinB1 = 4; // Encoder Output 'A' for motor B
+int encoderPinB2 = 2; // Encoder Output 'B' for motor B
+volatile int lastEncodedB = 0; // Here updated value of encoder store.
+volatile long encoderValueB = 0; // Raw encoder value
+
+void setup() {
+  pinMode(STBY, OUTPUT);
+  digitalWrite(STBY, HIGH);
+
+  pinMode(PWMA, OUTPUT);
+  pinMode(PWMB, OUTPUT);
+
+  pinMode(MotFwdA, OUTPUT);
+  pinMode(MotRevA, OUTPUT);
+
+  pinMode(MotFwdB, OUTPUT);
+  pinMode(MotRevB, OUTPUT);
+
+  Serial.begin(115200); // Initialize serial communication
+
+  pinMode(encoderPinA1, INPUT_PULLUP);
+  pinMode(encoderPinA2, INPUT_PULLUP);
+  pinMode(encoderPinB1, INPUT_PULLUP);
+  pinMode(encoderPinB2, INPUT_PULLUP);
+
+  // Attach interrupts for Motor A
+  attachInterrupt(digitalPinToInterrupt(encoderPinA1), updateEncoderA, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encoderPinA2), updateEncoderA, CHANGE);
+
+  // Attach interrupts for Motor B
+  attachInterrupt(digitalPinToInterrupt(encoderPinB1), updateEncoderB, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encoderPinB2), updateEncoderB, CHANGE);
+}
+
+void loop() {
+  // Move both motors forward
+  //moveForward();
+  delay(1000); // Move forward for 2 seconds
+
+  // Turn 90 degrees
+  turn90Degrees();
+  delay(2000); // Pause for 2 seconds
+}
+
+void moveForward() {
+  digitalWrite(MotFwdA, HIGH);
+  digitalWrite(MotRevA, LOW);
+  analogWrite(PWMA, 200); // PWM range is 0-255
+
+  digitalWrite(MotFwdB, HIGH);
+  digitalWrite(MotRevB, LOW);
+  analogWrite(PWMB, 200); // PWM range is 0-255
+
+  Serial.println("Moving Forward");
+}
+
+void turn90Degrees() {
+  // Set motor A to move forward
+  digitalWrite(MotFwdA, HIGH);
+  digitalWrite(MotRevA, LOW);
+  analogWrite(PWMA, 200); // PWM range is 0-255
+
+  // Set motor B to move backward
+  digitalWrite(MotFwdB, LOW);
+  digitalWrite(MotRevB, HIGH);
+  analogWrite(PWMB, 200); // PWM range is 0-255
+
+  // Wait for encoder to reach a value that represents a 90 degree turn
+  encoderValueA = 0; // Reset encoder value for motor A
+  encoderValueB = 0; // Reset encoder value for motor B
+  long targetCount = 900; // Start with an estimated value   #almost 90 degrees with speed of 200
+  while (abs(encoderValueA) <= targetCount && abs(encoderValueB) <= targetCount) {
+    // Wait
+  }
+
+  // Stop both motors
+  digitalWrite(MotFwdA, LOW);
+  digitalWrite(MotRevA, LOW);
+  digitalWrite(MotFwdB, LOW);
+  digitalWrite(MotRevB, LOW);
+
+  Serial.println("Turned 90 Degrees");
+}
+
+void updateEncoderA() {
+  int MSB = digitalRead(encoderPinA1); // MSB = most significant bit
+  int LSB = digitalRead(encoderPinA2); // LSB = least significant bit
+
+  int encoded = (MSB << 1) | LSB; // Converting the 2 pin value to single number
+  int sum = (lastEncodedA << 2) | encoded; // Adding it to the previous encoded value
+
+  if (sum == 0b1101 || sum == 0b0100 || sum == 0b0010 || sum == 0b1011) encoderValueA--;
+  if (sum == 0b1110 || sum == 0b0111 || sum == 0b0001 || sum == 0b1000) encoderValueA++;
+
+  lastEncodedA = encoded; // Store this value for next time
+}
+
+void updateEncoderB() {
+  int MSB = digitalRead(encoderPinB1); // MSB = most significant bit
+  int LSB = digitalRead(encoderPinB2); // LSB = least significant bit
+
+  int encoded = (MSB << 1) | LSB; // Converting the 2 pin value to single number
+  int sum = (lastEncodedB << 2) | encoded; // Adding it to the previous encoded value
+
+  if (sum == 0b1101 || sum == 0b0100 || sum == 0b0010 || sum == 0b1011) encoderValueB--;
+  if (sum == 0b1110 || sum == 0b0111 || sum == 0b0001 || sum == 0b1000) encoderValueB++;
+
+  lastEncodedB = encoded; // Store this value for next time
+}
