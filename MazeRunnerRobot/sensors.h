@@ -103,6 +103,7 @@ void countJunctions() {
   right_turns_counter += (had_right_wall && !has_right_wall);
 
   walls_prev = walls_current;
+  
 }
 
 void updateState(){
@@ -115,26 +116,15 @@ void updateState(){
   }
   
   if(left_sum == BUFF_SIZE && right_sum == BUFF_SIZE){
-    // digitalWrite(LEFT_LED_PIN,HIGH);
-    // digitalWrite(RIGHT_LED_PIN,HIGH);
     walls_current = both_walls; 
-	countJunctions();
-    return;
   }else if(left_sum == BUFF_SIZE){
-    // digitalWrite(LEFT_LED_PIN,HIGH);
-    // digitalWrite(RIGHT_LED_PIN,LOW);
     walls_current = left_wall; 
-	countJunctions(); 
-    return;
   }else if(right_sum == BUFF_SIZE){
     walls_current = right_wall; 
-	countJunctions();
-    // digitalWrite(LEFT_LED_PIN,LOW);
-    // digitalWrite(RIGHT_LED_PIN,HIGH);
-    return;
   }else if(right_sum != BUFF_SIZE && left_sum != BUFF_SIZE){
 	  walls_current = no_walls;
   }
+  countJunctions(); 
   return;
   // digitalWrite(LEFT_LED_PIN,LOW);
   // digitalWrite(RIGHT_LED_PIN,LOW);  
@@ -142,7 +132,7 @@ void updateState(){
 
 void TransmitValues(){
       std::ostringstream oss;
-      oss << "Walls status: " << walls_current << " Right: " << distance_Right << " Forward: " << distance_Forward << " Left: " << distance_Left <<  " error: " << error << " D: " << D << " P: " << P << " r_speed: " << right_speed_adjustment << " l_speed: " << left_speed_adjustment << " pid adjustment " << pidOutput ;
+      oss << "Walls status: " << walls_current << " Prev status: " << walls_prev << " Right: " << distance_Right << " Forward: " << distance_Forward << " Left: " << distance_Left << " Right Counter: " << right_turns_counter << " Left Counter: " << left_turns_counter ;
       if(debug_mode){WebSerial.println((oss.str()).c_str());}
       Serial.println((oss.str()).c_str());
 }
