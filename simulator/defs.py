@@ -1,4 +1,9 @@
 
+
+
+boards = {}
+
+
 DOWN = 0
 RIGHT = 1
 UP = 2

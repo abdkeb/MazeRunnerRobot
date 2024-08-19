@@ -2,6 +2,7 @@ from MazeEnv import MazeEnv
 import defs
 import numpy as np
 
+
 class TTRA:
 
     def __init__(self, actions, board):
@@ -17,6 +18,7 @@ class TTRA:
             state = self.env.step(action)
             to_return_states.append(state)
         return to_return_states
+
     def get_successors(self, state, front):
         to_return = []
         successors = self.env.succ(state)
@@ -33,6 +35,7 @@ class TTRA:
             if succ_state < state - 1:
                 to_return.append(defs.UP)
         return to_return
+
     def get_left_right(self, action):
         right = (action - 1) % 4
         left = (action + 1) % 4
@@ -66,6 +69,4 @@ class TTRA:
             action_index += 1
         return to_return_solution
 
-
-        return to_return_solution
-
+        # return to_return_solution
