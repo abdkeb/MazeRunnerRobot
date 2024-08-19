@@ -83,27 +83,14 @@ void adjust_course() {
         break;
 
     case left_wall:
-          move_forward();
-        // if (distance_Left < ADJUST_WALL_DIST) {
-        //     right_speed_adjustment = RIGHT_SPEED - 0.6 * (ADJUST_WALL_DIST - distance_Left);
-        // } else {
-        //     left_speed_adjustment = LEFT_SPEED - 0.6 * (ADJUST_WALL_DIST - distance_Left);
-        // }
+        move_forward();
         break;
 
     case right_wall:
         move_forward();
-        // if (distance_Right < ADJUST_WALL_DIST) {
-        //     left_speed_adjustment = LEFT_SPEED - 0.6 * (ADJUST_WALL_DIST - distance_Right);
-        // } else {
-        //     right_speed_adjustment = RIGHT_SPEED - 0.6 * (ADJUST_WALL_DIST - distance_Right);
-        // }
         break;
 
     default:
-        // Handle the case where no walls are detected or an invalid value
-        // left_speed_adjustment = LEFT_SPEED;
-        // right_speed_adjustment = RIGHT_SPEED;
         break;
 }
 

@@ -13,20 +13,25 @@
 #include "motors.h"
 #include "debug.h"
 #include "encoder.h"
-
+#include "comm.h"
 
 void setup() {
   Serial.begin(115200);
   while (!Serial);
-  if(debug_mode){
-  debugSetup();
-  }
-  setupSensors();
   pinMode(LEFT_LED_PIN, OUTPUT);
   pinMode(RIGHT_LED_PIN, OUTPUT);
+  if(debug_mode){
+  debugSetup();
+  } 
+  else {
+  commSetup();
+  commReadData();
+  }
+  setupSensors();
   motorsSetup();
   encoderSetup();
  
+  
 }
 
 
@@ -34,10 +39,12 @@ void setup() {
 
 void loop() {
   
+  
   // WebSerial is accessible at "<IP Address>/webserial" in browser
   if(debug_mode && !got_ip){
     getIPAddress();
-    }
+    }else
+  {}
   getMeasurments();
   updateState();
   countJunctions();
