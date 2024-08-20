@@ -39,7 +39,7 @@ bool got_ip = false;
 #define RIGHT_TURN_DURATION 490
 #define LEFT_TURN_DURATION 510
 
-#define RIGHT_SPEED 200
+#define RIGHT_SPEED 215
 #define LEFT_SPEED 215
 #define WALL_DIST 300
 #define ADJUST_WALL_DIST 150
@@ -122,6 +122,6 @@ bool saw_wall_right = false;
 bool saw_wall_left = false;
 
 int vec_index = 0;
-std::vector<std::pair<direction, int>> turns; //= { {right, 1}, {left, 1}, {left, 1}, {right, 1} };
+std::vector<std::pair<direction, int>> turns = { {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1},};
 
 #endif // DEFS_H
