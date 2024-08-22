@@ -86,4 +86,4 @@ def transmitSolution(maze_solution):
 buildMaze(10,print_maze=1)
 agent_actions, robot_actions, solution = solveMaze(print_solution=1)
 transmitSolution(solution)
-print(solution)
+# print(solution)
