@@ -53,20 +53,24 @@ def buildMaze(size, print_maze=0):
     app = MazeBuilder.MazeBuilder(root_builder, rows_builder=size, cols_builder=size)  # Adjust the size here as needed
     root_builder.mainloop()
     if print_maze:
-        print(defs.boards)
+        env = MazeEnv(defs.boards['Map'])
+        env.reset()
+        print(env.render())
+        clear_output(wait=True)
 
 def solveMaze( print_solution=0):
-    for i, board in enumerate(defs.boards.values()):
-        env = MazeEnv(board)
-        # try:
-        WAstar_agent = WeightedAStarAgent()
-        agent_action_list, total_cost, expanded = WAstar_agent.search(env, h_weight=0.5)
+    board = defs.boards['Map']
+    env = MazeEnv(board)
+    # try:
+    WAstar_agent = WeightedAStarAgent()
+    agent_action_list, total_cost, expanded = WAstar_agent.search(env, h_weight=0.5)
 
-        robot_action_list = TranslateToRobotActions.TTRA(agent_action_list, board).translateSolution()
-        maze_solution = convertTranslationToRobotFormat(robot_action_list)
-        if print_solution:
-            printSolution(agent_action_list, env)
-        return agent_action_list, robot_action_list, maze_solution
+    robot_action_list = TranslateToRobotActions.TTRA(agent_action_list, board).translateSolution()
+    maze_solution = convertTranslationToRobotFormat(robot_action_list)
+    if print_solution:
+        print(maze_solution)
+        # printSolution(agent_action_list, env)
+    return agent_action_list, robot_action_list, maze_solution
 
 def transmitSolution(maze_solution):
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -79,8 +83,7 @@ def transmitSolution(maze_solution):
     for row in maze_solution:
         sheet.append_row(row)
 
-buildMaze(10,1)
-agent_actions, robot_actions, solution = solveMaze(print_solution=0)
+buildMaze(10,print_maze=1)
+agent_actions, robot_actions, solution = solveMaze(print_solution=1)
 transmitSolution(solution)
-
 print(solution)

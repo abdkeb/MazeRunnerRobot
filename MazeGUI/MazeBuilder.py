@@ -136,8 +136,38 @@ class MazeBuilder:
         if not self.is_solution():
             return False, "No valid path from Start to Goal!"
 
-        # if not self.validate_path_width():
-        #     return False, "Paths must be exactly one block wide!"
+        # Check for 2x2 blocks of free cells
+        if self.has_2x2_free_block():
+            return False, "No 2x2 block of free cells is allowed!"
+
+        return True, ""
+
+    def has_2x2_free_block(self):
+        """Check if there is any 2x2 block of free cells ('F') in the maze."""
+        for r in range(self.rows - 1):
+            for c in range(self.cols - 1):
+                if (self.grid[r][c] == 'F' and self.grid[r][c + 1] == 'F' and
+                        self.grid[r + 1][c] == 'F' and self.grid[r + 1][c + 1] == 'F'):
+                    return True
+        return False
+
+    # ... your other methods ...
+
+    def submit(self):
+        # Validate the maze
+        is_valid, message = self.validate_maze()
+        if not is_valid:
+            # Show an error message if validation fails
+            messagebox.showwarning("Invalid Maze", message)
+            return
+
+        # Proceed to submit if validation is successful
+        maze_as_strings = [''.join(row) for row in self.grid]
+        maze_output = {
+            "Map": maze_as_strings
+        }
+        defs.boards = maze_output
+        self.root.quit()
 
         return True, ""
 
@@ -172,26 +202,7 @@ class MazeBuilder:
 
         return False
 
-    def validate_path_width(self):
-        """Ensure that all paths are exactly one block wide by checking adjacent free cells."""
-        for r in range(1, self.rows - 1):
-            for c in range(1, self.cols - 1):
-                if self.grid[r][c] == 'F':
-                    # Count adjacent free cells
-                    adjacent_free_cells = 0
-                    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
-
-                    for dr, dc in directions:
-                        nr, nc = r + dr, c + dc
-                        if self.grid[nr][nc] == 'F':
-                            adjacent_free_cells += 1
-
-                    # A path is exactly one block wide if there are 1 or 2 adjacent free cells
-                    if adjacent_free_cells > 2:
-                        return False  # If more than 2 adjacent free cells, the path is too wide
-
-        return True
-
+    
     def resize_grid(self, new_rows, new_cols):
         """Resize the grid, preserving as much of the existing maze as possible."""
         new_grid = [['F' for _ in range(new_cols)] for _ in range(new_rows)]
