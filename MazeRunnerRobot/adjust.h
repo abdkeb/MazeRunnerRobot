@@ -51,11 +51,15 @@ void adjust_course() {
     getMeasurments();
     stop_moving();
     if (distance_Right > distance_Left+40) {
+      digitalWrite(RIGHT_LED_PIN, HIGH);
       rotate_right(200);
+      digitalWrite(RIGHT_LED_PIN, LOW);
       continue;
     }
     if ( distance_Left > distance_Right+40) {
+      digitalWrite(LEFT_LED_PIN, HIGH);
       rotate_left(200);
+      digitalWrite(LEFT_LED_PIN, LOW);
       continue;
     }
     delay(500);  // Short pause before turning
@@ -80,15 +84,15 @@ void adjust_course() {
   switch (walls_current) {
     case both_walls:
       if (distance_Right < 180 && closing_to_right) {
-        if (distance_Right < 88) {
-          left_speed_adjustment = distance_Right*0.5;
+        if (distance_Right < 95) {
+          left_speed_adjustment = distance_Right*0.6;
         } else {
           left_speed_adjustment = LEFT_SPEED - lamda * (180 - distance_Right);
         }
       }
       if (distance_Left < 180 && closing_to_left) {
-        if (distance_Left < 88) {
-          right_speed_adjustment = distance_Left*0.5;
+        if (distance_Left < 95) {
+          right_speed_adjustment = distance_Left*0.6;
 
         } else {
           right_speed_adjustment = RIGHT_SPEED - lamda * (180 - distance_Left);

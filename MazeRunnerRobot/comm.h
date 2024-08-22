@@ -10,7 +10,8 @@
 const char* scriptUrl = "https://script.google.com/macros/s/AKfycbwd34TDhpt5AGHXRG5R1E_HHrW5pwkp3OkGSgzL4QSRIfCyVT2BY3pf9qvPh6CGi1iPtw/exec?read";
 
 void commSetup() {
-  
+  digitalWrite(LEFT_LED_PIN, HIGH);
+  digitalWrite(RIGHT_LED_PIN, HIGH);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -18,6 +19,8 @@ void commSetup() {
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
+  digitalWrite(LEFT_LED_PIN, LOW);
+  digitalWrite(RIGHT_LED_PIN, LOW);
 
 }
 
@@ -28,7 +31,7 @@ void commReadData() {
     http.begin(scriptUrl);  // Specify the URL
     int httpCode = http.GET();  // Make the request
 
-    if (httpCode > 0) { // Check for the returning code
+    if (httpCode == 200) { // Check for the returning code
       String payload = http.getString();
       Serial.print("HTTP Code: ");
       Serial.println(httpCode);
@@ -64,6 +67,14 @@ void commReadData() {
     } else {
       Serial.print("Error on HTTP request, HTTP code: ");
       Serial.println(httpCode);
+      while(1){
+        digitalWrite(LEFT_LED_PIN,HIGH);
+        digitalWrite(RIGHT_LED_PIN,LOW);
+        delay(200);
+        digitalWrite(LEFT_LED_PIN,LOW);
+        digitalWrite(RIGHT_LED_PIN,HIGH);
+        delay(200);
+        }
     }
 
     http.end();  // Free the resources

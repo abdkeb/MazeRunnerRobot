@@ -25,8 +25,8 @@ void setup() {
   // debugSetup();
   // }
   // else {
-  // // commSetup();
-  // // commReadData();
+  commSetup();
+  commReadData();
   // }
   setupSensors();
   motorsSetup();
@@ -65,13 +65,25 @@ void loop() {
   move_forward();
   if (vec_index == turns.size()) {
     if (distance_Forward < 200) {
-      for (int i = 1; i < 6; i++) {
-        digitalWrite(LEFT_LED_PIN, HIGH);
-        digitalWrite(RIGHT_LED_PIN, LOW);
-        rotate_right(500);
-        digitalWrite(LEFT_LED_PIN, LOW);
-        digitalWrite(RIGHT_LED_PIN, HIGH);
-        rotate_left(500);
+      if (distance_Left > distance_Right) {
+        for (int i = 1; i < 6; i++) {
+          digitalWrite(LEFT_LED_PIN, HIGH);
+          digitalWrite(RIGHT_LED_PIN, LOW);
+          rotate_left(500);
+          digitalWrite(LEFT_LED_PIN, LOW);
+          digitalWrite(RIGHT_LED_PIN, HIGH);
+          rotate_right(500);
+        }
+      }
+      else {
+        for (int i = 1; i < 6; i++) {
+          digitalWrite(LEFT_LED_PIN, LOW);
+          digitalWrite(RIGHT_LED_PIN, HIGH);
+          rotate_right(500);
+          digitalWrite(LEFT_LED_PIN, HIGH);
+          digitalWrite(RIGHT_LED_PIN, LOW);
+          rotate_left(500);
+        }
       }
       digitalWrite(LEFT_LED_PIN, LOW);
       digitalWrite(RIGHT_LED_PIN, LOW);

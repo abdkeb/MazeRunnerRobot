@@ -168,14 +168,14 @@ void turnLeft() {
       continue;
     }
 
-    if(distance_Forward < 50 ){
-      move_backward(300);
-    }
+    // if(distance_Forward < 50 ){
+    //   move_backward(300);
+    // }
 
-    if(distance_Right < 56){
-      move_backward(400);
-      break;
-    }
+    // if(distance_Right < 56){
+    //   move_backward(400);
+    //   break;
+    // }
 
     move_left();
     delay(10);
@@ -208,14 +208,14 @@ void turnRight() {
       break;          // Exit the function
     }
 
-    if(distance_Forward < 50 ){
-      move_backward(300);
-    }
+    // if(distance_Forward < 50 ){
+    //   move_backward(300);
+    // }
 
-    if(distance_Right < 56){
-      move_backward(400);
-      break;
-    }
+    // if(distance_Right < 56){
+    //   move_backward(400);
+    //   break;
+    // }
 
 
     // // If the robot is too close to the left corner side, perform a right rotation

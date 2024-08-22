@@ -16,8 +16,8 @@
 #define LED 2
 const bool debug_mode = 0;
 AsyncWebServer server(80);
-const char* ssid = "omar_room";      // Your WiFi SSID
-const char* password = "1234567899";  // Your WiFi Password
+const char* ssid = "Fouad";      // Your WiFi SSID
+const char* password = "12347890";  // Your WiFi Password
 bool got_ip = false;
 
 
@@ -122,6 +122,6 @@ bool saw_wall_right = false;
 bool saw_wall_left = false;
 
 int vec_index = 0;
-std::vector<std::pair<direction, int>> turns = { {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1},};
+std::vector<std::pair<direction, int>> turns; //= { {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1},};
 
 #endif // DEFS_H
