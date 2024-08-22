@@ -136,9 +136,8 @@ class MazeBuilder:
         if not self.is_solution():
             return False, "No valid path from Start to Goal!"
 
-        # Check for 2x2 blocks of free cells
         if self.has_2x2_free_block():
-            return False, "No 2x2 block of free cells is allowed!"
+            return False, "Path width shoud not be exactly one block, no 2x2 Free blocks allowed!"
 
         return True, ""
 
