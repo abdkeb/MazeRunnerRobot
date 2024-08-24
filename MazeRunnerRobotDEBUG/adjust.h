@@ -19,30 +19,6 @@ int correctSpeed(int speed) {
   return speed;
 }
 
-// PID Controller for wall-following
-void pid_adjust_course() {
-  // Get distance measurements from sensors
-  getMeasurments();
-  updateState();
-
-  // Calculate the error as the difference between right and left distances
-  error = (distance_Right - distance_Left) / 2;
-
-  P = Kp * error;
-
-  double dv = (error - previousError);
-  D = Kd * dv;
-  previousError = error;
-
-  // PID output
-  pidOutput = (P + D);
-
-  // Adjust motor speeds based on PID output
-  right_speed_adjustment = correctSpeed(RIGHT_SPEED * (1 - pidOutput));
-  left_speed_adjustment = correctSpeed(LEFT_SPEED * (1 + pidOutput));
-  // Move the robot forward with adjusted speeds
-  // move_forward();
-}
 
 void adjust_course() {
 

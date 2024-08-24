@@ -7,14 +7,14 @@
 #include <vector>
 #include <utility>  // For std::pair
 #include <WiFi.h>
-// #include <AsyncTCP.h>
-// #include <ESPAsyncWebServer.h>
-// #include <WebSerial.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <WebSerial.h>
 
 
 //debug
 #define LED 2
-const bool debug_mode = 0;
+const bool debug_mode = 1;  // WebSerial is accessible at "<IP Address>/webserial" in browser
 AsyncWebServer server(80);
 const char* ssid = "Fouad";      // Your WiFi SSID
 const char* password = "12347890";  // Your WiFi Password
@@ -58,25 +58,6 @@ int FrontSensorBuff[BUFF_SIZE] = {0};
 
 int buffer_index = 0; 
 
-// Encoder pins for Motor A
-int encoderPinA1 = 35; // Encoder Output 'A' for motor A
-int encoderPinA2 = 34; // Encoder Output 'B' for motor A
-volatile int lastEncodedA = 0; // Here updated value of encoder store.
-volatile long encoderValueA = 0; // Raw encoder value
-
-// Encoder pins for Motor B
-int encoderPinB1 = 4; // Encoder Output 'A' for motor B
-int encoderPinB2 = 2; // Encoder Output 'B' for motor B
-volatile int lastEncodedB = 0; // Here updated value of encoder store.
-volatile long encoderValueB = 0; // Raw encoder value
-
-double Kp = 0.007;
-double Kd = 0;
-double D = 0;
-double P = 0;
-double error = 0;
-double pidOutput = 0;
-double previousError = 0;
 
 typedef enum direction {
     left,
@@ -122,6 +103,6 @@ bool saw_wall_right = false;
 bool saw_wall_left = false;
 
 int vec_index = 0;
-std::vector<std::pair<direction, int>> turns; //= { {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1}, {right, 2},{right, 1}, {left, 1},{right, 1},{right, 2}, {left, 1}, {right, 1},{right, 1},};
+std::vector<std::pair<direction, int>> turns= { {right, 1},{right, 1},{left, 1},{left, 1}};
 
 #endif // DEFS_H

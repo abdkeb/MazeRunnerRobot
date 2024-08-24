@@ -6,13 +6,12 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-// #include <WebSerial.h>
+#include <WebSerial.h>
 #include "defs.h"
 #include "sensors.h"
 #include "adjust.h"
 #include "motors.h"
 #include "debug.h"
-#include "encoder.h"
 #include "comm.h"
 
 void setup() {
@@ -21,19 +20,16 @@ void setup() {
     ;
   pinMode(LEFT_LED_PIN, OUTPUT);
   pinMode(RIGHT_LED_PIN, OUTPUT);
-  // if(debug_mode){
-  // debugSetup();
-  // }
+  if(debug_mode){
+  debugSetup();
+  }
   // else {
-  commSetup();
-  commReadData();
+  //   commSetup();
+  //   commReadData();
   // }
   setupSensors();
   motorsSetup();
-  encoderSetup();
 }
-
-
 
 
 void loop() {

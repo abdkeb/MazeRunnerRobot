@@ -12,7 +12,7 @@
 #include <vector>
 #include <utility>
 #include <WiFi.h>
-// #include <WebSerial.h>  // For std::pair
+#include <WebSerial.h>  // For std::pair
 #include "defs.h"
 
 void updateState();
@@ -90,7 +90,8 @@ void getMeasurments(){
   // WebSerial.print(" Right: "); WebSerial.print(distance_Right);
   // WebSerial.print(" Forward: "); WebSerial.print(distance_Forward);
   // WebSerial.print(" Left: "); WebSerial.println(distance_Left);
-
+  // WebSerial.println("\n");
+  
 }
 
 void countJunctions() {
@@ -132,8 +133,10 @@ void updateState(){
 
 void TransmitValues(){
       std::ostringstream oss;
-      oss << "Walls status: " << walls_current << " Prev status: " << walls_prev << " Right: " << distance_Right << " Forward: " << distance_Forward << " Left: " << distance_Left << " Right Counter: " << right_turns_counter << " Left Counter: " << left_turns_counter ;
-      //if(debug_mode){WebSerial.println((oss.str()).c_str());}
+      oss << "Walls status: " << walls_current << " Prev status: " << walls_prev << " Right: " << distance_Right << " Forward: " << distance_Forward << " Left: " << distance_Left << " Right Counter: " << right_turns_counter << " Left Counter: " << left_turns_counter << "\n";
+      if(debug_mode){
+        WebSerial.println((oss.str()).c_str());
+      }
       Serial.println((oss.str()).c_str());
 }
 
