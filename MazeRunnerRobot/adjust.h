@@ -54,7 +54,7 @@ void adjust_course() {
   double diff_right_distaces = distance_Right - prev_distance_Right;
   bool closing_to_left = diff_left_distaces <= 0;
   bool closing_to_right = diff_right_distaces <= 0;
-  double lamda = 0.6;
+  double lamda = 0.7;
 
   // If the robot is too close to the right wall, steer left
   switch (walls_current) {

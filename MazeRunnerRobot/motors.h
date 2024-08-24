@@ -162,9 +162,12 @@ void turnLeft() {
     // }
 
     // If the robot is too close to the left corner side, perform a right rotation
-    if (distance_Forward < closeToCornerThreshold && frontDistanceChange < 0 && distance_Left < 70) {
+    if (distance_Forward < closeToCornerThreshold && distance_Left < 70) {
       stop_moving();
-      rotate_right(200);  // Perform a full right rotation
+      delay(300);
+      getMeasurments();
+      if (distance_Forward < closeToCornerThreshold)
+        rotate_right(200);  // Perform a full right rotation
       continue;
     }
 
@@ -189,7 +192,7 @@ void turnRight() {
   // Constants for determining when to stop turning
   const int wallDetectionThreshold = 180;  // Distance to consider a sensor has detected a wall
   const int frontClearThreshold = 250;     // Distance to consider the front is clear
-  const int closeToCornerThreshold = 100;  // Distance to consider the robot too close to the corner
+  const int closeToCornerThreshold = 110;  // Distance to consider the robot too close to the corner
 
   double currentFrontDistance;
   double frontDistanceChange;
@@ -225,9 +228,12 @@ void turnRight() {
     //   continue;
     // }
 
-    if (distance_Forward < closeToCornerThreshold && frontDistanceChange < 0 && distance_Right < 70) {
+    if (distance_Forward < closeToCornerThreshold && distance_Right < 70) {
       stop_moving();
-      rotate_left(200);  // Perform a full left rotation
+      delay(300);
+      getMeasurments();
+      if (distance_Forward < closeToCornerThreshold)
+        rotate_left(200);  // Perform a full left rotation
       continue;
     }
 

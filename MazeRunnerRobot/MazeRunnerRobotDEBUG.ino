@@ -4,10 +4,15 @@
 #include <vector>
 #include <utility>  // For std::pair
 #include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+// #include <WebSerial.h>
 #include "defs.h"
 #include "sensors.h"
 #include "adjust.h"
 #include "motors.h"
+#include "debug.h"
+#include "encoder.h"
 #include "comm.h"
 
 void setup() {
@@ -16,13 +21,18 @@ void setup() {
     ;
   pinMode(LEFT_LED_PIN, OUTPUT);
   pinMode(RIGHT_LED_PIN, OUTPUT);
-  
+  // if(debug_mode){
+  // debugSetup();
+  // }
+  // else {
   commSetup();
   commReadData();
-  
+  // }
   setupSensors();
   motorsSetup();
+  encoderSetup();
 }
+
 
 
 
@@ -54,7 +64,7 @@ void loop() {
 
   move_forward();
   if (vec_index == turns.size()) {
-    if (distance_Forward < 180) {
+    if (distance_Forward < 200) {
       if (distance_Left > distance_Right) {
         for (int i = 1; i < 6; i++) {
           digitalWrite(LEFT_LED_PIN, HIGH);
