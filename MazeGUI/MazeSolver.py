@@ -74,7 +74,7 @@ def solveMaze( print_solution=0):
 
 def transmitSolution(maze_solution):
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name("C:\Technion\semester_9\IOT\Simulator\simulator\JSONkey.json", scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_name("JSONkey.json", scope)
     client = gspread.authorize(creds)
     sheet = client.open("Transmit" ).sheet1  # Open the first sheet
     # Clear the existing data in the sheet
