@@ -201,32 +201,43 @@ class MazeBuilder:
 
         return False
 
-    
     def resize_grid(self, new_rows, new_cols):
         """Resize the grid, preserving as much of the existing maze as possible."""
-        new_grid = [['F' for _ in range(new_cols)] for _ in range(new_rows)]
-        new_buttons = [[None for _ in range(new_cols)] for _ in range(new_rows)]
+        # Save the current grid's contents
+        old_grid = self.grid
+        old_buttons = self.buttons
+        old_rows = self.rows
+        old_cols = self.cols
 
-        min_rows = min(self.rows, new_rows)
-        min_cols = min(self.cols, new_cols)
-
-        # Copy the existing grid contents to the new grid
-        for r in range(min_rows):
-            for c in range(min_cols):
-                new_grid[r][c] = self.grid[r][c]
-
-        self.grid = new_grid
-        self.buttons = new_buttons
+        # Update the grid size
         self.rows = new_rows
         self.cols = new_cols
 
-        # Clear the old grid and create a new one
+        # Create a new grid with the new size
+        self.grid = [['F' for _ in range(new_cols)] for _ in range(new_rows)]
+        self.buttons = [[None for _ in range(new_cols)] for _ in range(new_rows)]
+
+        # Copy over the old grid's contents into the new grid within bounds
+        min_rows = min(old_rows, new_rows)
+        min_cols = min(old_cols, new_cols)
+        # for r in range(min_rows):
+        #     for c in range(min_cols):
+        #         self.grid[r][c] = old_grid[r][c]
+
+        # Clear the GUI grid and re-create buttons for the new grid size
         for widget in self.root.grid_slaves():
             widget.grid_forget()
 
         self.create_grid()
         self.create_controls()
-        self.set_edge_walls()
+        self.set_edge_walls()  # Ensure edges are properly set as walls
+
+        # Reapply the button states and colors based on the new grid
+        for r in range(min_rows):
+            for c in range(min_cols):
+                cell_type = self.grid[r][c]
+                color = {'S': 'green', 'G': 'red', 'F': 'white', 'W': 'black'}
+                self.buttons[r][c].config(bg=color[cell_type])
 
     def increase_size(self):
         """Increase grid size by 1 row and 1 column."""
@@ -236,7 +247,7 @@ class MazeBuilder:
 
     def decrease_size(self):
         """Decrease grid size by 1 row and 1 column, if possible."""
-        if self.rows > 5 and self.cols > 5:  # Prevent reducing below 4x4 (or some minimum size)
+        if self.rows > 5 and self.cols > 5:  # Prevent reducing below 5x5 (or some minimum size)
             new_rows = self.rows - 1
             new_cols = self.cols - 1
             self.resize_grid(new_rows, new_cols)
